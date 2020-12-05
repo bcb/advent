@@ -8,9 +8,9 @@ data Task = Task {
 
 valid :: Task -> Bool
 valid task =
-    let lowchar = (password task) !! ((low task) - 1)
-        highchar = (password task) !! ((high task) - 1)
-    in sum (fmap fromEnum [lowchar == (char task), highchar == (char task)]) == 1
+    let lowchar = password task !! (low task - 1)
+        highchar = password task !! (high task - 1)
+    in sum (fmap fromEnum [lowchar == char task, highchar == char task]) == 1
 
 parseLine :: String -> Task
 parseLine s =
