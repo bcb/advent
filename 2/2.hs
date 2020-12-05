@@ -6,18 +6,11 @@ data Task = Task {
     password :: String
 } deriving (Show)
 
-ischar :: Int -> String -> Char -> Bool
-ischar position pwd c = (pwd !! (position - 1)) == c
-
 valid :: Task -> Bool
 valid task =
-    sum (fmap fromEnum [
-        ischar (low task) (password task) (char task),
-        ischar (high task) (password task) (char task)
-    ]) == 1
-
-filtr :: [Task] -> [Task]
-filtr = filter (\t -> valid t)
+    let lowchar = (password task) !! ((low task) - 1)
+        highchar = (password task) !! ((high task) - 1)
+    in sum (fmap fromEnum [lowchar == (char task), highchar == (char task)]) == 1
 
 parseLine :: String -> Task
 parseLine s =
@@ -26,10 +19,7 @@ parseLine s =
         c = head $ fst (break (==':') (parts !! 1))
     in Task (read l) (read $ tail h) c (parts !! 2)
 
-tasks :: [String] -> [Task]
-tasks = fmap (\s -> parseLine s)
-
 main :: IO ()
 main = do
     input <- readFile "input"
-    print.length.filtr.tasks.lines $ input
+    print.length.filter valid.fmap parseLine.lines $ input
