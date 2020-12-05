@@ -12,6 +12,6 @@ multiply = fmap (\(x, y, z) -> x * y * z)
 
 main :: IO ()
 main = do
-    f <- readFile "1.txt"
+    f <- readFile "input"
     let ints = fmap (read::String->Int) $ lines $ f
     print.head.multiply.filtr.combinations $ ints

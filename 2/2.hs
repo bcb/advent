@@ -31,5 +31,5 @@ tasks = fmap (\s -> parseLine s)
 
 main :: IO ()
 main = do
-    input <- readFile "2.txt"
+    input <- readFile "input"
     print.length.filtr.tasks.lines $ input
