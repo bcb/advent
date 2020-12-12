@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fee5c41c41f5fa4c38c277e3c5373d2c8e6adeede31616c66cc003f122e5184d
+-- hash: 4beac3b54d7c536225359c02d8b2c0e5a1eebadba1771cfc099dbe8cb54630f0
 
 name:           aoc4
 version:        0.1.0.0
@@ -34,7 +34,10 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers
+    , regex-pcre
     , split
+    , validation
   default-language: Haskell2010
 
 executable aoc4-exe
@@ -47,7 +50,10 @@ executable aoc4-exe
   build-depends:
       aoc4
     , base >=4.7 && <5
+    , containers
+    , regex-pcre
     , split
+    , validation
   default-language: Haskell2010
 
 test-suite aoc4-test
@@ -61,5 +67,8 @@ test-suite aoc4-test
   build-depends:
       aoc4
     , base >=4.7 && <5
+    , containers
+    , regex-pcre
     , split
+    , validation
   default-language: Haskell2010
