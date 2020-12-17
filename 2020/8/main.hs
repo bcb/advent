@@ -1,18 +1,18 @@
-data Op = Nop | Acc Int | Jmp Int deriving Show
+data Op = Nop | Acc Int | Jmp Int deriving (Show, Eq)
 type Program = [Op]
 type AccVal = Int
 type LineNumber = Int
 type Executed = [Int]
 
-run :: Program -> AccVal -> LineNumber -> Executed -> AccVal
-run program accVal lineNumber executed
-    | lineNumber `elem` executed = accVal
+run :: AccVal -> LineNumber -> Executed -> Program -> AccVal
+run accVal lineNumber executed program
+    | lineNumber `elem` executed = 0
     | lineNumber >= length program = accVal
     | otherwise =
         case (program !! lineNumber) of
-            Nop -> run program accVal (lineNumber + 1) (executed ++ [lineNumber])
-            Acc num -> run program (accVal + num) (lineNumber + 1) (executed ++ [lineNumber])
-            Jmp num -> run program accVal (lineNumber + num) (executed ++ [lineNumber])
+            Nop -> run accVal (lineNumber + 1) (executed ++ [lineNumber]) program
+            Acc num -> run (accVal + num) (lineNumber + 1) (executed ++ [lineNumber]) program
+            Jmp num -> run accVal (lineNumber + num) (executed ++ [lineNumber]) program
 
 parse :: String -> Op
 parse s =
@@ -24,8 +24,19 @@ parse s =
         "acc" -> Acc num
         "jmp" -> Jmp num
 
+replace :: Program -> LineNumber -> Op -> Program
+replace program lineNumber op =
+    take lineNumber program ++ [op] ++ drop (lineNumber + 1) program
+
+modifyProgram :: Program -> LineNumber -> Program
+modifyProgram program lineNumber =
+    case (program !! lineNumber) of
+        Acc num -> replace program lineNumber Nop
+        Jmp num -> replace program lineNumber Nop
+
 main :: IO ()
 main = do
     input <- readFile "input"
     let program = fmap parse.lines $ input
-    print $ run program 0 0 []
+    let accjmps = filter (\(_, op) -> op /= Nop) (zip [0..] program)
+    print.fmap (run 0 0 []) $ fmap (\(lineNumber, _) -> modifyProgram program lineNumber) accjmps
