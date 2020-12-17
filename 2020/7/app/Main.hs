@@ -6,6 +6,10 @@ data Bag = Bag (String, [(String, Int)]) deriving Show
 findBag :: [Bag] -> String -> Bag
 findBag bags s = head $ filter (\(Bag (name, _)) -> name == s) bags
 
+countHolding :: [Bag] -> Bag -> Int
+countHolding bags (Bag (name, subBags)) =
+    sum $ fmap (\(name, count) -> count + (count * countHolding bags (findBag bags name))) subBags
+
 carriesBag :: [Bag] -> Bag -> String -> Bool
 carriesBag bags (Bag (name, subBags)) s =
     any (\(name, subbags) -> (name == s || (carriesBag bags (findBag bags name) s))) subBags
@@ -29,4 +33,4 @@ main :: IO ()
 main = do
     input <- readFile "input"
     let bags = fmap parseBag.lines $ input
-    print.length.filter (\bag -> carriesBag bags bag "shiny gold") $ bags
+    print $ countHolding bags (findBag bags "shiny gold")
