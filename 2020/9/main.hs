@@ -1,6 +1,7 @@
 import Control.Applicative
+import Data.List
 
-preambleLength = 5
+preambleLength = 25
 
 preamble :: Int -> [Int] -> [Int]
 preamble curr all = take preambleLength $ drop (curr - preambleLength) all
@@ -14,14 +15,13 @@ valids curr = fmap (\(x,y) -> x + y).combinations.preamble curr
 isValid :: [Int] -> Int -> Bool
 isValid all curr = elem (all !! curr) $ valids curr all
 
-solve1 :: [Int] -> Int
-solve1 all = (all !!).head.filter (not.isValid all) $ [preambleLength..(length all)-1]
-
-solve2 :: [Int] -> Int
-solve2 all = (all !!).head.filter (not.isValid all) $ [preambleLength..(length all)-1]
+contiguousSets :: [a] -> [[a]]
+contiguousSets = filter (\s -> length s >= 2).concat.fmap inits.tails
 
 main :: IO ()
 main = do
     input <- readFile "input"
     let all = fmap (read :: String -> Int).lines $ input
-    print.solve1 $ all
+    let solve1 = head.filter (not.isValid all) $ [preambleLength..(length all)-1]
+    let solve2 = head.filter (\s -> (==) (all !! solve1) (sum s)).contiguousSets $ take solve1 all
+    print $ minimum solve2 + maximum solve2
