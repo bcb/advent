@@ -26,6 +26,13 @@ adjacentCoords (x, y) = [(x-1, y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (
 adjacents :: [(Int, Int)] -> Board -> [Maybe Position]
 adjacents coords board = fmap (\c -> Map.lookup c board) coords
 
+visibleCoords :: (Int, Int) -> [[(Int, Int)]]
+visibleCoords (x, y) = [
+    zip [x-1, x-2..0] [y-1, y-2..0],
+    zip [x..0] [y-1, y-2..0],
+    zip [x..0] [y-1, y-2..0],
+]
+
 applyRule :: Position -> [Maybe Position] -> Position
 applyRule Floor _ = Floor
 applyRule EmptySeat adjacents
