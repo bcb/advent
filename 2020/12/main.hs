@@ -1,58 +1,43 @@
 import Data.List (foldl')
 
-data Position = Position Int Int deriving (Eq, Show)
-data Facing = FacingNorth | FacingEast | FacingSouth | FacingWest deriving (Eq, Show)
-data State = State Position Facing deriving Show
-data Move =
-    MoveNorth Int
-    | MoveSouth Int
-    | MoveEast Int
-    | MoveWest Int
-    | TurnLeft Int
-    | TurnRight Int
-    | MoveForward Int
-    deriving (Eq, Show)
+data ShipPosition = ShipPosition Int Int deriving Show
+data WaypointPosition = WaypointPosition Int Int deriving Show
+data Move = MoveNorth Int | MoveSouth Int | MoveEast Int | MoveWest Int | RotateLeft Int | RotateRight Int | MoveForward Int deriving (Eq, Show)
 
-turnleft :: Facing -> Facing
-turnleft FacingNorth = FacingWest
-turnleft FacingWest = FacingSouth
-turnleft FacingSouth = FacingEast
-turnleft FacingEast = FacingNorth
+rotateLeft :: ShipPosition -> WaypointPosition -> Int -> WaypointPosition
+rotateLeft (ShipPosition se sn) (WaypointPosition we wn) x =
+    case x `mod` 360 of
+        90 -> WaypointPosition (-wn) we
+        180 -> WaypointPosition (-we) (-wn)
+        270 -> WaypointPosition wn (-we)
 
-turnright :: Facing -> Facing
-turnright FacingNorth = FacingEast
-turnright FacingEast = FacingSouth
-turnright FacingSouth = FacingWest
-turnright FacingWest = FacingNorth
+rotateRight s w x = rotateLeft s w (-x)
 
-moveForward :: Facing -> Position -> Int -> Position
-moveForward FacingNorth (Position e n) x = Position e (n+x)
-moveForward FacingEast (Position e n) x = Position (e+x) n
-moveForward FacingSouth (Position e n) x = Position e (n-x)
-moveForward FacingWest (Position e n) x = Position (e-x) n
+moveForward :: ShipPosition -> WaypointPosition -> Int -> ShipPosition
+moveForward (ShipPosition se sn) (WaypointPosition we wn) x = ShipPosition (se+we*x) (sn+wn*x)
 
-move :: State -> Move -> State
-move (State (Position e n) f) (MoveNorth x) = State (Position e (n+x)) f
-move (State (Position e n) f) (MoveSouth x) = State (Position e (n-x)) f
-move (State (Position e n) f) (MoveEast x) = State (Position (e+x) n) f
-move (State (Position e n) f) (MoveWest x) = State (Position (e-x) n) f
-move (State (Position e n) f) (TurnLeft x) = State (Position e n) (iterate turnleft f !! (x `div` 90))
-move (State (Position e n) f) (TurnRight x) = State (Position e n) (iterate turnright f !! (x `div` 90))
-move (State p f) (MoveForward x) = State (moveForward f p x) f
+move :: (ShipPosition, WaypointPosition) -> Move -> (ShipPosition, WaypointPosition)
+move (s, WaypointPosition e n) (MoveNorth x) = (s, WaypointPosition e (n+x))
+move (s, WaypointPosition e n) (MoveSouth x) = (s, WaypointPosition e (n-x))
+move (s, WaypointPosition e n) (MoveEast x) = (s, WaypointPosition (e+x) n)
+move (s, WaypointPosition e n) (MoveWest x) = (s, WaypointPosition (e-x) n)
+move (s, w) (RotateLeft x) = (s, rotateLeft s w x)
+move (s, w) (RotateRight x) = (s, rotateRight s w x)
+move st@(s, w) (MoveForward x) = (moveForward s w x, w)
 
 parse :: String -> Move
 parse ('N':xs) = MoveNorth $ read xs
 parse ('S':xs) = MoveSouth $ read xs
 parse ('E':xs) = MoveEast $ read xs
 parse ('W':xs) = MoveWest $ read xs
-parse ('L':xs) = TurnLeft $ read xs
-parse ('R':xs) = TurnRight $ read xs
+parse ('L':xs) = RotateLeft $ read xs
+parse ('R':xs) = RotateRight $ read xs
 parse ('F':xs) = MoveForward $ read xs
 
-manhattan :: State -> Int
-manhattan (State (Position e n) _) = abs e + abs n
+manhattan :: ShipPosition -> Int
+manhattan (ShipPosition e n) = abs e + abs n
 
 main :: IO ()
 main = do
     input <- readFile "input"
-    print.manhattan.foldl' move (State (Position 0 0) FacingEast).fmap parse.lines $ input
+    print.manhattan.fst.foldl' move (ShipPosition 0 0, WaypointPosition 10 1).fmap parse.lines $ input
