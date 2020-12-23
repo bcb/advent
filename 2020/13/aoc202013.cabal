@@ -1,0 +1,65 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 7dbbe94eecb10b24a557b714738e4e96cfe7bd96972bb66f88c79c306cfadd8c
+
+name:           aoc202013
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/aoc202013#readme>
+homepage:       https://github.com/githubuser/aoc202013#readme
+bug-reports:    https://github.com/githubuser/aoc202013/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2020 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/aoc202013
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_aoc202013
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , split
+  default-language: Haskell2010
+
+executable aoc202013-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_aoc202013
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc202013
+    , base >=4.7 && <5
+    , split
+  default-language: Haskell2010
+
+test-suite aoc202013-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_aoc202013
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc202013
+    , base >=4.7 && <5
+    , split
+  default-language: Haskell2010
