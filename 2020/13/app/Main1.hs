@@ -1,3 +1,5 @@
+module Main1 where
+
 import Data.List (sortBy)
 import Data.Ord (comparing)
 import Data.List.Split (splitOn)

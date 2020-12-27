@@ -22,18 +22,31 @@ description:         Please see the README on GitHub at <https://github.com/gith
 dependencies:
 - base >= 4.7 && < 5
 - split
+- arithmoi
 
 library:
   source-dirs: src
 
 executables:
-  aoc202013-exe:
-    main:                Main.hs
+  part1:
+    main:                Main1.hs
     source-dirs:         app
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -main-is Main1
+    dependencies:
+    - aoc202013
+
+  part2:
+    main:                Main2.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is Main2
     dependencies:
     - aoc202013
 
