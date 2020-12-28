@@ -11,4 +11,4 @@ nonxs (_, b) = b /= "x"
 main :: IO ()
 main = do
     input <- lines <$> readFile "input"
-    print.chineseRemainder.fmap clean.filter nonxs.zip [0..].(splitOn ",").head.tail $ input
+    print.chineseRemainder.fmap clean.filter nonxs.zip [0..].splitOn ",".head.tail $ input
