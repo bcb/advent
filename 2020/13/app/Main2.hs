@@ -1,11 +1,14 @@
 module Main2 where
 
-import Data.Maybe (isJust)
 import Data.List.Split (splitOn)
-import Data.Tuple (swap)
 import Math.NumberTheory.Moduli.Chinese (chineseRemainder)
+
+clean :: (Integer, String) -> (Integer, Integer)
+clean (n, bstr) = let b = read bstr :: Integer in (b - n, b)
+
+nonxs (_, b) = b /= "x"
 
 main :: IO ()
 main = do
-    input <- lines <$> readFile "testinput"
-    print.fmap (\(x, y) -> (x, read y :: Integer)).filter (\(_, y) -> y /= "x") $ zip [0..] $ (splitOn ",").head.tail $ input
+    input <- lines <$> readFile "input"
+    print.chineseRemainder.fmap clean.filter nonxs.zip [0..].(splitOn ",").head.tail $ input
