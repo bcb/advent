@@ -23,7 +23,7 @@ move (s, WaypointPosition e n) (MoveEast x) = (s, WaypointPosition (e+x) n)
 move (s, WaypointPosition e n) (MoveWest x) = (s, WaypointPosition (e-x) n)
 move (s, w) (RotateLeft x) = (s, rotateLeft s w x)
 move (s, w) (RotateRight x) = (s, rotateRight s w x)
-move st@(s, w) (MoveForward x) = (moveForward s w x, w)
+move (s, w) (MoveForward x) = (moveForward s w x, w)
 
 parse :: String -> Move
 parse ('N':xs) = MoveNorth $ read xs
