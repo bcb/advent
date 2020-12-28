@@ -1,0 +1,88 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 1cd1ad264d25d25cab6659c0cbcae3e52d20f3b1f868e4abc1be6929847745fd
+
+name:           aoc202014
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/aoc202014#readme>
+homepage:       https://github.com/githubuser/aoc202014#readme
+bug-reports:    https://github.com/githubuser/aoc202014/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2020 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/aoc202014
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_aoc202014
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , regex-pcre
+    , text
+  default-language: Haskell2010
+
+executable aoc202014-1
+  main-is: Main1.hs
+  other-modules:
+      Main2
+      Paths_aoc202014
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is Main1
+  build-depends:
+      aoc202014
+    , base >=4.7 && <5
+    , containers
+    , regex-pcre
+    , text
+  default-language: Haskell2010
+
+executable aoc202014-2
+  main-is: Main2.hs
+  other-modules:
+      Main1
+      Paths_aoc202014
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is Main2
+  build-depends:
+      aoc202014
+    , base >=4.7 && <5
+    , containers
+    , regex-pcre
+    , text
+  default-language: Haskell2010
+
+test-suite aoc202014-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_aoc202014
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc202014
+    , base >=4.7 && <5
+    , containers
+    , regex-pcre
+    , text
+  default-language: Haskell2010
