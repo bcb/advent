@@ -28,7 +28,7 @@ library:
   source-dirs: src
 
 executables:
-  part1:
+  aoc2020131:
     main:                Main1.hs
     source-dirs:         app
     ghc-options:
@@ -39,7 +39,7 @@ executables:
     dependencies:
     - aoc202013
 
-  part2:
+  aoc2020132:
     main:                Main2.hs
     source-dirs:         app
     ghc-options:
