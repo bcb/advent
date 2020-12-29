@@ -3,9 +3,7 @@ import Data.Tuple (swap)
 import Data.List.Split (splitOn)
 
 addNext :: (Map Int Int, Int) -> Int -> (Map Int Int, Int)
-addNext (m, last) n =
-    let distance = n - (findWithDefault n last m)
-    in (insert last n m, distance)
+addNext (m, last) n = (insert last n m, n - (findWithDefault n last m))
 
 main :: IO ()
 main = do
