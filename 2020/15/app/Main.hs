@@ -1,4 +1,4 @@
-import Data.Map (Map, fromList, findWithDefault, insert, (!), size)
+import Data.Map (Map, fromList, findWithDefault, insert, size)
 import Data.Tuple (swap)
 import Data.List.Split (splitOn)
 
