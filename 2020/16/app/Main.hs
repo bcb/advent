@@ -5,11 +5,6 @@ import Data.List.Split (splitOn)
 numRules = 20
 lineOfMyTicket = 22 -- Zero based
 numHeader = 25
-{--
-numRules = 3
-lineOfMyTicket = 5 -- Zero based
-numHeader = 8
---}
 
 data Rule = Rule String (Int, Int) (Int, Int) deriving (Show, Eq)
 
