@@ -28,8 +28,7 @@ validTicket :: [Rule] -> [Int] -> Bool
 validTicket rules ticket = all (validAgainstRules rules) ticket
 
 countMatches :: Rule -> [Int] -> Int
-countMatches rule field =
-    length.filter (==True).map (validAgainstRule rule) $ field
+countMatches rule field = length.filter (==True).map (validAgainstRule rule) $ field
 
 getMatches :: [Rule] -> [Int] -> ([Int], [(Rule, Int)])
 getMatches rules field =
@@ -46,23 +45,17 @@ findClearWinner ((field, matches):xs) =
     else
         findClearWinner xs
 
-removeField :: [[Int]] -> ([Int], (Rule, Int)) -> [[Int]]
-removeField [] _ = []
-removeField (x:xs) winner
-    | x == (fst winner) = removeField xs winner
-    | otherwise = x : removeField xs winner
-
-removeRule :: [Rule] -> ([Int], (Rule, Int)) -> [Rule]
-removeRule [] _ = []
-removeRule (x:xs) winner
-    | x == (fst.snd $ winner) = removeRule xs winner
-    | otherwise = x : removeRule xs winner
+removeItem :: (a -> b -> Bool) -> [a] -> b -> [a]
+removeItem f [] _ = []
+removeItem f (x:xs) winner
+    | f x winner = removeItem f xs winner
+    | otherwise = x : removeItem f xs winner
 
 findClearWinners :: [Rule] -> [[Int]] -> [([Int], (Rule, Int))]
 findClearWinners _ [] = []
 findClearWinners rules fields =
     let winner = findClearWinner.map (getMatches rules) $ fields
-    in winner : findClearWinners (removeRule rules winner) (removeField fields winner)
+    in winner : findClearWinners (removeItem (\x w -> x == (fst.snd $ winner)) rules winner) (removeItem (\x winner -> (x == fst winner)) fields winner)
 
 main :: IO ()
 main = do
