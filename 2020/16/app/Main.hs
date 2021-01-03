@@ -42,19 +42,19 @@ findClearWinner :: [([Int], [(Rule, Int)])] -> ([Int], (Rule, Int))
 findClearWinner ((field, matches):xs) =
     if isClearWinner matches then (field, head matches) else findClearWinner xs
 
-removeItem :: (a -> b -> Bool) -> [a] -> b -> [a]
-removeItem f [] _ = []
-removeItem f (x:xs) y
-    | f x y = removeItem f xs y
-    | otherwise = x : removeItem f xs y
+removeItem :: (a -> Bool) -> [a] -> [a]
+removeItem _ [] = []
+removeItem f (x:xs)
+    | f x = removeItem f xs
+    | otherwise = x : removeItem f xs
 
 findClearWinners :: [Rule] -> [[Int]] -> [([Int], (Rule, Int))]
 findClearWinners _ [] = []
 findClearWinners rules fields =
     let winner = findClearWinner.map (getMatches rules) $ fields
     in winner : findClearWinners
-        (removeItem (\x w -> x == (fst.snd $ winner)) rules winner)
-        (removeItem (\x winner -> (x == fst winner)) fields winner)
+        (removeItem (== (fst.snd $ winner)) rules)
+        (removeItem (== (fst winner)) fields)
 
 main :: IO ()
 main = do
