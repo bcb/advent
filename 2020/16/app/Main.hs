@@ -40,10 +40,7 @@ isClearWinner matches = (snd.head $ matches) /= (snd.head.tail $ matches)
 
 findClearWinner :: [([Int], [(Rule, Int)])] -> ([Int], (Rule, Int))
 findClearWinner ((field, matches):xs) =
-    if isClearWinner matches then
-        (field, head matches)
-    else
-        findClearWinner xs
+    if isClearWinner matches then (field, head matches) else findClearWinner xs
 
 removeItem :: (a -> b -> Bool) -> [a] -> b -> [a]
 removeItem f [] _ = []
