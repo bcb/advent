@@ -55,7 +55,9 @@ findClearWinners :: [Rule] -> [[Int]] -> [([Int], (Rule, Int))]
 findClearWinners _ [] = []
 findClearWinners rules fields =
     let winner = findClearWinner.map (getMatches rules) $ fields
-    in winner : findClearWinners (removeItem (\x w -> x == (fst.snd $ winner)) rules winner) (removeItem (\x winner -> (x == fst winner)) fields winner)
+    in winner : findClearWinners
+        (removeItem (\x w -> x == (fst.snd $ winner)) rules winner)
+        (removeItem (\x winner -> (x == fst winner)) fields winner)
 
 main :: IO ()
 main = do
