@@ -1,11 +1,17 @@
-import Data.List (transpose, isPrefixOf)
+import Data.List (transpose, isPrefixOf, sortBy)
+import Data.Ord (comparing)
 import Data.List.Split (splitOn)
 
 numRules = 20
-lineMyTicket = 22
+lineOfMyTicket = 22 -- Zero based
 numHeader = 25
+{--
+numRules = 3
+lineOfMyTicket = 5 -- Zero based
+numHeader = 8
+--}
 
-data Rule = Rule String (Int, Int) (Int, Int) deriving Show
+data Rule = Rule String (Int, Int) (Int, Int) deriving (Show, Eq)
 
 parseRange :: String -> (Int, Int)
 parseRange s = let ints = map read.splitOn "-" $ s in (head ints, last ints)
@@ -26,14 +32,49 @@ validAgainstRules rules ticket = any (\rule -> validAgainstRule rule ticket) rul
 validTicket :: [Rule] -> [Int] -> Bool
 validTicket rules ticket = all (validAgainstRules rules) ticket
 
-findRule :: [Rule] -> [Int] -> Rule
-findRule rules field = head.filter (\r -> all (validAgainstRule r) field) $ rules
+countMatches :: Rule -> [Int] -> Int
+countMatches rule field =
+    length.filter (==True).map (validAgainstRule rule) $ field
+
+getMatches :: [Rule] -> [Int] -> ([Int], [(Rule, Int)])
+getMatches rules field =
+    (field, sortBy (flip $ comparing snd) $ map (\r -> (r, countMatches r field)) rules)
+
+isClearWinner :: [(Rule, Int)] -> Bool
+isClearWinner (x:[]) = True
+isClearWinner matches = (snd.head $ matches) /= (snd.head.tail $ matches)
+
+findClearWinner :: [([Int], [(Rule, Int)])] -> ([Int], (Rule, Int))
+findClearWinner ((field, matches):xs) =
+    if isClearWinner matches then
+        (field, head matches)
+    else
+        findClearWinner xs
+
+removeField :: [[Int]] -> ([Int], (Rule, Int)) -> [[Int]]
+removeField [] _ = []
+removeField (x:xs) winner
+    | x == (fst winner) = removeField xs winner
+    | otherwise = x : removeField xs winner
+
+removeRule :: [Rule] -> ([Int], (Rule, Int)) -> [Rule]
+removeRule [] _ = []
+removeRule (x:xs) winner
+    | x == (fst.snd $ winner) = removeRule xs winner
+    | otherwise = x : removeRule xs winner
+
+findClearWinners :: [Rule] -> [[Int]] -> [([Int], (Rule, Int))]
+findClearWinners _ [] = []
+findClearWinners rules fields =
+    let winner = findClearWinner.map (getMatches rules) $ fields
+    in winner : findClearWinners (removeRule rules winner) (removeField fields winner)
 
 main :: IO ()
 main = do
     input <- lines <$> getContents
     let rules = map parseRule.take numRules $ input
     let tickets = map (map (read :: String -> Int)) $ map (splitOn ",").drop numHeader $ input
-    let myTicket = map (read :: String -> Int).splitOn "," $ input !! lineMyTicket
-    print.map (findRule rules).transpose.filter (validTicket rules) $ tickets
-    -- print.filter (\(_, Rule s _ _) -> isPrefixOf "departure" s).zip myTicket.
+    let myTicket = map (read :: String -> Int).splitOn "," $ input !! lineOfMyTicket
+    let fields = findClearWinners rules $ transpose.(:) myTicket.filter (validTicket rules) $ tickets
+    let departureResults = filter (\(_, (Rule name _ _, _)) -> isPrefixOf "departure" name) $ fields
+    print.product.head.transpose.map (\(f, _) -> f) $ departureResults
