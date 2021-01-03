@@ -68,8 +68,8 @@ main :: IO ()
 main = do
     input <- lines <$> getContents
     let rules = map parseRule.take numRules $ input
-    let tickets = map (map (read :: String -> Int)) $ map (splitOn ",").drop numHeader $ input
     let myTicket = map (read :: String -> Int).splitOn "," $ input !! lineOfMyTicket
-    let fields = findClearWinners rules $ transpose.(:) myTicket.filter (validTicket rules) $ tickets
+    let tickets = map (map (read :: String -> Int)).map (splitOn ",").drop numHeader $ input
+    let fields = findClearWinners rules.transpose.(:) myTicket.filter (validTicket rules) $ tickets
     let departureResults = filter (\(_, (Rule name _ _, _)) -> isPrefixOf "departure" name) $ fields
     print.product.head.transpose.map (\(f, _) -> f) $ departureResults
