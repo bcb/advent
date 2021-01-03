@@ -44,9 +44,9 @@ findClearWinner ((field, matches):xs) =
 
 removeItem :: (a -> b -> Bool) -> [a] -> b -> [a]
 removeItem f [] _ = []
-removeItem f (x:xs) winner
-    | f x winner = removeItem f xs winner
-    | otherwise = x : removeItem f xs winner
+removeItem f (x:xs) y
+    | f x y = removeItem f xs y
+    | otherwise = x : removeItem f xs y
 
 findClearWinners :: [Rule] -> [[Int]] -> [([Int], (Rule, Int))]
 findClearWinners _ [] = []
