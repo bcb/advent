@@ -64,4 +64,4 @@ main = do
     let tickets = map (map (read :: String -> Int)).map (splitOn ",").drop numHeader $ input
     let fields = findClearWinners rules.transpose.(:) myTicket.filter (validTicket rules) $ tickets
     let departureResults = filter (\(_, (Rule name _ _, _)) -> isPrefixOf "departure" name) $ fields
-    print.product.head.transpose.map (\(f, _) -> f) $ departureResults
+    print.product.head.transpose.map fst $ departureResults
