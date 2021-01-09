@@ -5,7 +5,6 @@ boardHeight = 8
 
 data Coord = Coord Int Int Int Int deriving (Show, Eq)
 
-getX, getY, getZ :: Coord -> Int
 getX (Coord x _ _ _) = x
 getY (Coord _ y _ _) = y
 getZ (Coord _ _ z _) = z
