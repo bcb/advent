@@ -5,10 +5,10 @@ boardHeight = 7 -- Zero based
 
 newtype Coord = Coord (Int, Int, Int) deriving (Show, Eq)
 
-fst3,snd3,trd3 :: Coord -> Int
-fst3 (Coord (x,_,_)) = x
-snd3 (Coord (_,x,_)) = x
-trd3 (Coord (_,_,x)) = x
+getX, getY, getZ :: Coord -> Int
+getX (Coord (x,_,_)) = x
+getY (Coord (_,y,_)) = y
+getZ (Coord (_,_,z)) = z
 
 countActiveNeighbours :: [Coord] -> [Coord] -> Int
 countActiveNeighbours actives neighbourCoords =
@@ -27,9 +27,9 @@ applyCube actives coord
 step :: [Coord] -> Int -> [Coord]
 step actives _ =
     map fromJust.filter isJust $ [applyCube actives (Coord (x,y,z)) |
-        x <- [(minimum.map fst3 $ actives)-1..(maximum.map fst3 $ actives)+1],
-        y <- [(minimum.map snd3 $ actives)-1..(maximum.map snd3 $ actives)+1],
-        z <- [(minimum.map trd3 $ actives)-1..(maximum.map trd3 $ actives)+1]]
+        x <- [(minimum.map getX $ actives)-1..(maximum.map getX $ actives)+1],
+        y <- [(minimum.map getY $ actives)-1..(maximum.map getY $ actives)+1],
+        z <- [(minimum.map getZ $ actives)-1..(maximum.map getZ $ actives)+1]]
 
 main :: IO ()
 main = do
