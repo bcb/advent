@@ -1,9 +1,9 @@
 import Data.Maybe (fromJust,isJust)
 
-newtype Coord = Coord (Int, Int, Int) deriving (Show, Eq)
-
 boardWidth = 7 -- Zero based
 boardHeight = 7 -- Zero based
+
+newtype Coord = Coord (Int, Int, Int) deriving (Show, Eq)
 
 fst3,snd3,trd3 :: Coord -> Int
 fst3 (Coord (x,_,_)) = x
@@ -26,14 +26,10 @@ applyCube actives coord
 
 step :: [Coord] -> Int -> [Coord]
 step actives _ =
-    let minX = minimum.map fst3 $ actives
-        maxX = maximum.map fst3 $ actives
-        minY = minimum.map snd3 $ actives
-        maxY = maximum.map snd3 $ actives
-        minZ = minimum.map trd3 $ actives
-        maxZ = maximum.map trd3 $ actives
-    in
-    map fromJust.filter isJust $ [applyCube actives (Coord (x,y,z)) | x <- [minX-1 ..maxX+1], y <- [minY-1..maxY+1], z <- [minZ-1..maxZ+1]]
+    map fromJust.filter isJust $ [applyCube actives (Coord (x,y,z)) |
+        x <- [(minimum.map fst3 $ actives)-1..(maximum.map fst3 $ actives)+1],
+        y <- [(minimum.map snd3 $ actives)-1..(maximum.map snd3 $ actives)+1],
+        z <- [(minimum.map trd3 $ actives)-1..(maximum.map trd3 $ actives)+1]]
 
 main :: IO ()
 main = do
