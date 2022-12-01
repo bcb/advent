@@ -6,5 +6,5 @@ answered_by_all group = filter (\c -> (all (\line -> c `elem` line) group)) $ he
 
 main :: IO ()
 main = do
-    input <- readFile "input"
-    print.sum.fmap (length.answered_by_all) $ fmap (fmap nub.sort) $ fmap lines $ splitOn "\n\n" input
+  input <- readFile "input"
+  print . sum . fmap (length . answered_by_all) $ fmap (fmap nub . sort) $ fmap lines $ splitOn "\n\n" input
