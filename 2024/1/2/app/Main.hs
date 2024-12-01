@@ -1,4 +1,3 @@
-import Data.List (sort)
 import Data.List.Split (splitOn)
 
 occurrences :: Eq a => [a] -> a -> Int
